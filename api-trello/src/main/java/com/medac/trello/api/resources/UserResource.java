@@ -1,11 +1,5 @@
 package com.medac.trello.api.resources;
 
-import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.medac.trello.api.model.User;
 import com.medac.trello.api.model.UserRepository;
 import com.medac.trello.api.request.LoginRequest;
@@ -22,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.util.Map;
-
 
 @RestController
 @RequestMapping(value = "/user", produces = APPLICATION_JSON_VALUE)
@@ -37,21 +29,16 @@ public class UserResource implements TrelloApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
-    return userRepository.findOneByEmail(req.email())
-      .filter(u -> u.getPassword().equals(req.password().trim()))
-      .<ResponseEntity<?>>map(u -> ResponseEntity.ok(new UserView(u.getName())))
-      .orElseGet(() -> ResponseEntity.status(401).body(Map.of("message","Invalid email or password")));
+    public ResponseEntity<UserView> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userRepository.findOneByEmail(request.email())
+                .filter(user -> user.getPassword().equals(request.password().trim()))
+                .map(user -> new UserView(user.getName()))
+                .orElseThrow(InvalidLoginCredentialsException::new));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
-    if (userRepository.findOneByEmail(req.email()).isPresent()) {
-        return ResponseEntity.status(409).body(Map.of("message","Email already registered"));
+    public ResponseEntity<UserView> register(@Valid @RequestBody RegisterRequest request) {
+        final var newUser = new User(request.name(),request.userName(), request.email(), request.password());
+        return ResponseEntity.ok(new UserView(userRepository.save(newUser).getName()));
     }
-    var user = new User(req.name(), req.userName(), req.email(), req.password());
-    userRepository.save(user);
-    return ResponseEntity.ok(new UserView(user.getName()));
-    }
-
 }
