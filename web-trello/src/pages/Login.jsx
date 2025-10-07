@@ -27,7 +27,7 @@ export default function Login() {
     <AuthCard
       title="Bienvenido"
       subtitle="Inicia sesión para continuar."
-      footer={<p>¿No tienes una cuenta? ! <Link to="/register" className="text-violet-600 hover:underline">Crea una cuenta</Link></p>}
+      footer={<p>¿No tienes una cuenta? Registrate! <Link to="/register" className="text-violet-600 hover:underline">Crea una cuenta</Link></p>}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input label="Email" type="email" name="email" placeholder="Introduce tu correo electrónico" register={register} required />
