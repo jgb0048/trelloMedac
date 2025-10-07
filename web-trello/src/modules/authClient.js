@@ -1,50 +1,28 @@
-// ¡Solo para demo! No uses esto en producción.
-const USERS_KEY = "demo_users";
+// src/modules/authClient.js
+
+// URL ABSOLUTA del backend (la leemos del .env.local)
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8080/trello/v1";
+
 const LOCAL_SESSION_KEY = "demo_auth_local";
 const SESSION_SESSION_KEY = "demo_auth_session";
 
-function loadUsers() {
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-function saveUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-// Hash cutre para demo (NO seguro)
-function hash(str) {
-  let h = 2166136261;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
-  }
-  return (h >>> 0).toString(16);
-}
-
-export function register(email, password) {
-  const users = loadUsers();
-  if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-    throw new Error("Email is already registered.");
-  }
-  users.push({
-    email,
-    passwordHash: hash(password),
-    createdAt: Date.now(),
+// helper para peticiones JSON
+async function request(path, options = {}) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options,
   });
-  saveUsers(users);
-  return { email };
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || res.statusText || "API error");
+  }
+  if (res.status === 204) return null;
+  return res.json();
 }
 
-export function login(email, password, remember) {
-  const users = loadUsers();
-  const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-  if (!user || user.passwordHash !== hash(password)) {
-    throw new Error("Invalid email or password.");
-  }
-  const payload = JSON.stringify({ email: user.email, t: Date.now() });
+// Guarda sesión igual que tu versión demo (compatible con tu AuthContext)
+function saveSession({ email, name }, remember) {
+  const payload = JSON.stringify({ email, name, t: Date.now() });
   if (remember) {
     localStorage.setItem(LOCAL_SESSION_KEY, payload);
     sessionStorage.removeItem(SESSION_SESSION_KEY);
@@ -52,7 +30,6 @@ export function login(email, password, remember) {
     sessionStorage.setItem(SESSION_SESSION_KEY, payload);
     localStorage.removeItem(LOCAL_SESSION_KEY);
   }
-  return { email: user.email };
 }
 
 export function getCurrentUser() {
@@ -61,8 +38,8 @@ export function getCurrentUser() {
     sessionStorage.getItem(SESSION_SESSION_KEY);
   if (!raw) return null;
   try {
-    const { email } = JSON.parse(raw);
-    return { email };
+    const { email, name } = JSON.parse(raw);
+    return { email, name };
   } catch {
     return null;
   }
@@ -73,11 +50,37 @@ export function signOut() {
   sessionStorage.removeItem(SESSION_SESSION_KEY);
 }
 
-export function resetPassword(email, newPassword) {
-  const users = loadUsers();
-  const idx = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
-  if (idx === -1) throw new Error("Email not found.");
-  users[idx].passwordHash = hash(newPassword);
-  saveUsers(users);
-  return true;
+// ---- llamadas reales al backend ----
+
+// El backend de registro pide: userName, name, email, password
+// Si tu UI solo pide email+password, derivamos name/userName del email:
+export async function register(email, password) {
+  const userName = email.split("@")[0] || "user";
+  const name = userName;
+
+  // POST /trello/v1/user/register -> { name: "..." }
+  const res = await request("/user/register", {
+    method: "POST",
+    body: JSON.stringify({ userName, name, email, password }),
+  });
+
+  // guardamos sesión (email + name)
+  saveSession({ email, name: res?.name || name }, true);
+  return { email, name: res?.name || name };
+}
+
+export async function login(email, password, remember) {
+  // POST /trello/v1/user/login -> { name: "..." }
+  const res = await request("/user/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+
+  saveSession({ email, name: res?.name || email }, remember);
+  return { email, name: res?.name || email };
+}
+
+// No tienes endpoint de reset; mantenemos el error como antes
+export function resetPassword() {
+  throw new Error("Password reset is not implemented on the backend yet.");
 }
