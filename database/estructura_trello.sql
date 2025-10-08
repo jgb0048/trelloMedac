@@ -11,7 +11,6 @@ CREATE TABLE Usuario (
 CREATE TABLE Tablero (
     id_tablero INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    -- 'TEXT' es suficiente en MySQL para descripciones largas.
     descripcion TEXT, 
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_usuario_creador INT NOT NULL,
