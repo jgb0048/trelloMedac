@@ -1,10 +1,11 @@
 -- TABLA DE USUARIOS
 CREATE TABLE IF NOT EXISTS usuario (
-    id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre_usuario VARCHAR(100) NOT NULL,
-    nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
+    id_usuario INT NOT NULL AUTO_INCREMENT ,
+    nombre_usuario VARCHAR(100) NOT NULL ,
+    nombre VARCHAR(100) NOT NULL ,
+    email VARCHAR(100) UNIQUE NOT NULL ,
+    password VARCHAR(255) NOT NULL ,
+PRIMARY KEY (id_usuario)
 );
 
 -- TABLA DE LOS TABLEROS
