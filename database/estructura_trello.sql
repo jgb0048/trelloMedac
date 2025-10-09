@@ -11,7 +11,6 @@ CREATE TABLE Usuario (
 CREATE TABLE Tablero (
     id_tablero INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    -- 'TEXT' es suficiente en MySQL para descripciones largas.
     descripcion TEXT, 
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_usuario_creador INT NOT NULL,
@@ -19,7 +18,7 @@ CREATE TABLE Tablero (
 );
 
 
--- TABLA INTERMEDIA PARA N:M USUARIOS-TABLERO
+-- TABLA INTERMEDIA PARA USUARIOS-TABLERO
 CREATE TABLE MiembroTablero (
     id_usuario INT NOT NULL,
     id_tablero INT NOT NULL,
@@ -44,10 +43,8 @@ CREATE TABLE Lista (
 CREATE TABLE Tarjeta (
     id_tarjeta INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
-    -- 'TEXT' es suficiente en MySQL para descripciones largas.
-    descripcion TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_vencimiento DATETIME, -- Usamos DATETIME para vencimiento sin valor predeterminado
+    fecha_vencimiento DATETIME,
     orden INT NOT NULL,
     id_lista INT NOT NULL,
     FOREIGN KEY (id_lista) REFERENCES Lista(id_lista)
@@ -57,7 +54,6 @@ CREATE TABLE Tarjeta (
 -- TABLA DE COMENTARIOS
 CREATE TABLE Comentario (
     id_comentario INT AUTO_INCREMENT PRIMARY KEY,
-    -- 'TEXT' es suficiente en MySQL para contenido largo.
     contenido TEXT NOT NULL,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_usuario INT NOT NULL,
@@ -77,7 +73,7 @@ CREATE TABLE Etiqueta (
 );
 
 
--- TABLA INTERMEDIA PARA N:M TARJETAS-ETIQUETAS
+-- TABLA INTERMEDIA PARA TARJETAS-ETIQUETAS
 CREATE TABLE TarjetaEtiqueta (
     id_tarjeta INT NOT NULL,
     id_etiqueta INT NOT NULL,
