@@ -1,24 +1,24 @@
 package com.medac.trello.api.model;
 
 import com.medac.trello.api.view.UserView;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Usuario")
 public class User {
 
 
     @Id
     @GeneratedValue
-    private UUID id;
+    @Column(name = "id_usuario")
+    private long id;
 
+    @Column(name = "nombre")
     private String name;
+    @Column(name = "nombre_usuario")
     private String userName;
     private String email;
     private String password;
@@ -32,11 +32,11 @@ public class User {
         this.password = password;
     }
 
-    public UUID getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(long id) {
         this.id = id;
     }
 
