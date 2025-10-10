@@ -6,13 +6,15 @@ import jakarta.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
+import static jakarta.persistence.GenerationType.*;
+
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuario")
 public class User {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id_usuario")
     private long id;
 
