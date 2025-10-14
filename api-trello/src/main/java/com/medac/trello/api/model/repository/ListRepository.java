@@ -1,7 +1,7 @@
 package com.medac.trello.api.model.repository;
 
 import com.medac.trello.api.model.Board;
-import com.medac.trello.api.model.Card;
+import com.medac.trello.api.model.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Repository
-public interface CardRepository extends CrudRepository<Card, UUID> {
+public interface ListRepository extends CrudRepository<List, UUID> {
 
-    Set<Card> findAllByOwnlingListId(Long listId);
+    Set<Board> findAllByOwningBoardId(Long boardId);
 }

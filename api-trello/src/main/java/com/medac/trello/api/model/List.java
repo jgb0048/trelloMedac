@@ -7,23 +7,23 @@ import java.util.Objects;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "etiqueta")
-public class Label {
+@Table(name = "lista")
+public class List {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id_etiqueta")
+    @Column(name = "id_lista")
     private long id;
     @Column(name = "nombre", nullable = false)
     private String name;
-    @Column(name = "color")
-    private String colour;
+    @Column(name = "orden", nullable = false)
+    private int order;
     @Column(name = "id_tablero", nullable = false)
     private long owningBoardId;
 
-    public Label(String name, String colour, long owningBoardId) {
+    public List(String name, int order, long owningBoardId) {
         this.name = name;
-        this.colour = colour;
+        this.order = order;
         this.owningBoardId = owningBoardId;
     }
 
@@ -35,8 +35,8 @@ public class Label {
         return name;
     }
 
-    public String getColour() {
-        return colour;
+    public int getOrder() {
+        return order;
     }
 
     public long getOwningBoardId() {
@@ -46,8 +46,8 @@ public class Label {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Label label = (Label) o;
-        return id == label.id;
+        List list = (List) o;
+        return id == list.id;
     }
 
     @Override
