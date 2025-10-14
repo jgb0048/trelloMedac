@@ -1,7 +1,7 @@
 package com.medac.trello.api.resources;
 
 import com.medac.trello.api.model.User;
-import com.medac.trello.api.model.UserRepository;
+import com.medac.trello.api.model.repository.UserRepository;
 import com.medac.trello.api.request.CodeGrantRequest;
 import com.medac.trello.api.request.LoginRequest;
 import com.medac.trello.api.request.RegisterRequest;
