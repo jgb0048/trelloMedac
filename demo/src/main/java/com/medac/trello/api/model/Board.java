@@ -61,7 +61,16 @@ public class Board {
     public long getCreatedBy() {
         return createdBy;
     }
+    //SETTERS
+    // Necesarios para la actualización de datos (PUT)
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    // id, createdOn, y createdBy no necesitan setters ya que no deben cambiarse.
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
