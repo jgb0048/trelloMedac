@@ -5,6 +5,7 @@ import com.medac.trello.api.model.Card;
 import com.medac.trello.api.model.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.medac.trello.api.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class CardService {
 
     //EDITAR
     public Card actualizarCard(Long idTarjeta, Card cardDetails) {
-        Optional<Card> CardOptional = CardRepository.findById(idTarjeta);
+        Optional<Card> CardOptional = cardRepository.findById(idTarjeta);
         if (CardOptional.isPresent()) {
             Card cardExistente = CardOptional.get();
 
@@ -40,12 +41,13 @@ public class CardService {
             return cardRepository.save(cardExistente);
 
         }else {
-            throw new RuntimeException("Tarjeta con encontrada con el id" + idTarjeta);
+            //throw new RuntimeException("Tarjeta con encontrada con el id" + idTarjeta);
+            throw new ResourceNotFoundException("Tarjeta no encontrada con id: " + idTarjeta);
         }
     }
 
     //BORRAR
-    public void deleteCard(Long idTarjeta) {
+    /*public void deleteCard(Long idTarjeta) {
         //VERIFICAR SI LA TARJETA EXISTE
         boolean existe =  cardRepository.existsById(idTarjeta);
         if (existe) {
@@ -57,4 +59,16 @@ public class CardService {
 
         }
     }
+
+     */
+// D - Eliminar
+    public void eliminarTarjeta(Long idTarjeta) {
+        if (!cardRepository.existsById(idTarjeta)) {
+            // Lanza la excepción si no existe
+            throw new ResourceNotFoundException("Tarjeta no encontrada con id: " + idTarjeta);
+        }
+        cardRepository.deleteById(idTarjeta);
+    }
+
+
 }
