@@ -24,7 +24,12 @@ public class CardService {
     public List<Card> findAllCards() {
         return cardRepository.findAll();
     }
-
+    //OBTENER POR ID
+    public Card obtenerCardPorId(Long idTarjeta) {
+        // Usa findById y orElseThrow para devolver el objeto o lanzar la excepción 404
+        return cardRepository.findById(idTarjeta)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarjeta no encontrada con id: " + idTarjeta));
+    }
     //EDITAR
     public Card actualizarCard(Long idTarjeta, Card cardDetails) {
         Optional<Card> CardOptional = cardRepository.findById(idTarjeta);

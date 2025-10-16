@@ -18,6 +18,7 @@ public class CardController {
     private CardService cardService;
 
     //AÑADIR
+    @PostMapping
     public ResponseEntity<Card>crearTarjeta(@RequestBody Card card){
         Card newCard = cardService.saveCard(card);
         return new ResponseEntity<>(newCard, HttpStatus.CREATED);
