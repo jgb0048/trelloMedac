@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface CardRepository extends CrudRepository<Card, UUID> {
 
-    Set<Card> findAllByOwnlingListId(Long listId);
+    Set<Card> findAllByOwningListId(Long listId);
 }
