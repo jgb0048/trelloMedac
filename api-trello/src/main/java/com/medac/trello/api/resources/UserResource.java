@@ -11,6 +11,8 @@ import com.medac.trello.api.view.UserView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -24,14 +26,19 @@ import static org.springframework.http.ResponseEntity.ok;
 public class UserResource implements TrelloApi {
 
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserResource(UserRepository userRepository) {
+    public UserResource(UserRepository userRepository, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/login")
     public ResponseEntity<UserView> login(@Valid @RequestBody LoginRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.email(),
+                request.password()));
         return ok(userRepository.findOneByEmail(request.email())
                 .filter(user -> user.getPassword().equals(request.password().trim()))
                 .map(user -> new UserView(user.getName()))
