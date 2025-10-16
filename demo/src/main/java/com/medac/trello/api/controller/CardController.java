@@ -41,8 +41,8 @@ public class CardController {
         }
     }
 
-    //BORRAR - DELETE /api/tarjetas/{idTarjeta}
-    @DeleteMapping("/{idTarjeta}")
+    //BORRAR - DELETE /api/tarjetas/{idTarjeta} BORRADO AL INCLUIR GlobalExceptionHandler Y ResourceNotFoundException
+    /*@DeleteMapping("/{idTarjeta}")
     public ResponseEntity<HttpStatus> eliminarTarjeta(@PathVariable Long idTarjeta){
         try{
             cardService.deleteCard(idTarjeta);
@@ -53,5 +53,14 @@ public class CardController {
         }
 
     }
+
+     */
+// BORRAR - DELETE /api/tarjetas/{idTarjeta}
+    @DeleteMapping("/{idTarjeta}")
+    public ResponseEntity<HttpStatus> eliminarTarjeta(@PathVariable Long idTarjeta){
+        cardService.eliminarTarjeta(idTarjeta);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+    }
+
 
 }
