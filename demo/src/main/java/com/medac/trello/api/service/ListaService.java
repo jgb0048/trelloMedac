@@ -1,7 +1,7 @@
-package com.medac.trello.api.service; // Asume tu paquete de servicio
+package com.medac.trello.api.service;
 
 import com.medac.trello.api.model.Lista;
-import com.medac.trello.api.model.repository.ListaRepository; // O ListaRepository, asegúrate del nombre
+import com.medac.trello.api.model.repository.ListaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List; 
@@ -13,7 +13,7 @@ public class ListaService {
     @Autowired
     private ListaRepository listaRepository;
 
-    // C - Crear / Actualizar
+    // Crear / Actualizar
     public Lista guardarLista(Lista lista) {
         return listaRepository.save(lista);
     }
