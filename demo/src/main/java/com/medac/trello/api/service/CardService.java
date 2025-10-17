@@ -26,7 +26,7 @@ public class CardService {
     }
     //OBTENER POR ID
     public Card obtenerCardPorId(Long idTarjeta) {
-        // Usa findById y orElseThrow para devolver el objeto o lanzar la excepción 404
+        // para devolver el objeto o lanzar la excepción 404
         return cardRepository.findById(idTarjeta)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarjeta no encontrada con id: " + idTarjeta));
     }
@@ -66,7 +66,7 @@ public class CardService {
     }
 
      */
-// D - Eliminar
+// Eliminar
     public void eliminarTarjeta(Long idTarjeta) {
         if (!cardRepository.existsById(idTarjeta)) {
             // Lanza la excepción si no existe
