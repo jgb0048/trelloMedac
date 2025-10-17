@@ -52,7 +52,7 @@ public class Card {
 
     }
 
-        // --- GETTERS (CORREGIDOS para usar los nombres de la clase) ---
+        // GETTERS
         public Long getId() { return id; }
         public String getTitulo() { return titulo; } // CORREGIDO: getTitulo
         public String getDescripcion() { return descripcion; } // Añadido
@@ -61,7 +61,7 @@ public class Card {
         public Integer getOrden() { return orden; } // CORREGIDO: getOrden
         public Long getOwningListId() { return owningListId; }
 
-        // --- SETTERS (CORREGIDOS para usar los nombres de la clase) ---
+        // SETTERS 
         public void setTitulo(String titulo) { this.titulo = titulo; } // CORREGIDO: setTitulo
         public void setDescripcion(String descripcion) { this.descripcion = descripcion; } // Añadido
         public void setExpiresOn(LocalDate expiresOn) { this.expiresOn = expiresOn; }
