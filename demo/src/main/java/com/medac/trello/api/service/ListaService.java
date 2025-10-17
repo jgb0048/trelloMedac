@@ -47,7 +47,7 @@ public class ListaService {
         }
     }
 
-    // D - Eliminar
+    //Eliminar
     public void eliminarLista(Long idLista) {
         listaRepository.deleteById(idLista);
     }
