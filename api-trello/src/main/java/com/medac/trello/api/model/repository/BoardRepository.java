@@ -1,16 +1,11 @@
 package com.medac.trello.api.model.repository;
 
+
 import com.medac.trello.api.model.Board;
-import com.medac.trello.api.model.User;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
-@Repository
-public interface BoardRepository extends CrudRepository<Board, UUID> {
-
-    Set<Board> findAllByCreatedBy(Long userId);
+public interface BoardRepository extends JpaRepository<Board, Long> {
+    Set<Board> findAllByCreatedBy(Long ownerId);
 }
