@@ -42,6 +42,8 @@ export default function Login() {
           {isSubmitting ? "Signing in..." : "Iniciar sesión"}
         </Button>
       </form>
+
+      
     </AuthCard>
   );
 }

@@ -1,17 +1,18 @@
 package com.medac.trello.api.model;
 
-import com.medac.trello.api.view.UserView;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Table(name = "usuario")
-public class User {
-
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -21,15 +22,15 @@ public class User {
     @Column(name = "nombre")
     private String name;
     @Column(name = "nombre_usuario")
-    private String userName;
+    private String username;
     private String email;
     private String password;
 
     protected User() {}
 
-    public User(String name, String userName, String email, String password) {
+    public User(String name, String username, String email, String password) {
         this.name = name;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
@@ -38,40 +39,47 @@ public class User {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     @Override
