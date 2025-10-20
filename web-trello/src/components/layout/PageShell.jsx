@@ -1,0 +1,125 @@
+// src/components/layout/PageShell.jsx
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../modules/auth/AuthContext.jsx";
+
+export default function PageShell({ title, actions, children }) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-brand-25 via-white to-brand-50">
+      <Header />
+      <main className="mx-auto max-w-7xl px-6 py-8">
+        <div className="flex items-center justify-between gap-4">
+          {title ? (
+            <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900">
+              {title}
+            </h1>
+          ) : (
+            <div />
+          )}
+          {actions}
+        </div>
+        <div className="mt-6">{children}</div>
+      </main>
+    </div>
+  );
+}
+
+function Header() {
+  return (
+    <header className="sticky top-0 z-40 bg-brand-600 text-white shadow-lg">
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-semibold tracking-wide">
+            Nombre de mi app
+          </span>
+        </div>
+
+        <div className="hidden md:flex flex-1 justify-center">
+          <input
+            type="search"
+            placeholder="Buscar tableros, listas o tareas..."
+            className="w-full max-w-md rounded-xl bg-brand-500/40 placeholder-white/70 text-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-white/60"
+          />
+        </div>
+
+        <AvatarArea />
+      </div>
+    </header>
+  );
+}
+
+function AvatarArea() {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  const initial = (user?.email || "U").charAt(0).toUpperCase();
+
+  useEffect(() => {
+    function onDocClick(e) {
+      if (!ref.current) return;
+      if (!ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
+
+  const go = (path) => {
+    setOpen(false);
+    navigate(path);
+  };
+
+  const logout = async () => {
+    setOpen(false);
+    try {
+      await signOut();
+    } catch { /* empty */ }
+    navigate("/login", { replace: true });
+  };
+
+  return (
+    <div className="flex items-center gap-3" ref={ref}>
+      <span className="text-sm text-white/90 hidden sm:inline">
+        Mi cuenta
+      </span>
+
+      <div className="relative">
+        <button
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/30 border border-white/40 font-semibold"
+          onClick={() => setOpen((v) => !v)}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          title={user?.email || "Mi cuenta"}
+        >
+          {initial}
+        </button>
+
+        {open && (
+          <div
+            role="menu"
+            className="absolute right-0 mt-2 w-44 rounded-xl border border-white/20 bg-white text-neutral-900 p-1 shadow-lg"
+          >
+            <MenuItem onClick={() => go("/perfil")}>Mi cuenta</MenuItem>
+            <MenuItem onClick={() => go("/ajustes")}>Ajustes</MenuItem>
+            <MenuItem danger onClick={logout}>Cerrar sesión</MenuItem>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MenuItem({ children, onClick, danger }) {
+  return (
+    <button
+      role="menuitem"
+      onClick={onClick}
+      className={`w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-neutral-100 ${
+        danger ? "text-red-600 hover:bg-red-50" : ""
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
