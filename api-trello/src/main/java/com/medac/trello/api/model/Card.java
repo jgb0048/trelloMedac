@@ -1,73 +1,82 @@
 package com.medac.trello.api.model;
 
+
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static jakarta.persistence.GenerationType.IDENTITY;
-
 @Entity
 @Table(name = "tarjeta")
 public class Card {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tarjeta")
-    private long id;
+    private Long id;
+
     @Column(name = "titulo", nullable = false)
-    private String title;
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime createdOn;
+    private String titulo;
+
+    @Column (name ="descripcion")
+    private String descripcion;
+
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
+
     @Column(name = "fecha_vencimiento", nullable = false)
     private LocalDate expiresOn;
+
     @Column(name = "orden", nullable = false)
-    private int order;
+    private Integer orden;
+
     @Column(name = "id_lista", nullable = false)
-    private long owningListId;
+    private Long owningListId;
 
-    public Card(String title, LocalDateTime createdOn, LocalDate expiresOn, int order, long owningListId) {
-        this.title = title;
-        this.createdOn = createdOn;
+    //CONSTRUCTOS SIN ARGUMENTOS
+    public Card(){
+        //Establecer la fecha de creación automáticamente si la DB no lo hace
+        if (this.fechaCreacion == null) {
+            this.fechaCreacion = LocalDateTime.now();
+        }
+    }
+
+    //CONSTRUCTOR
+    public Card(String titulo, LocalDateTime fechaCreacion, LocalDate expiresOn, Integer orden, Long owningListId){
+        this.titulo = titulo;
+        this.fechaCreacion = fechaCreacion;
         this.expiresOn = expiresOn;
-        this.order = order;
+        this.orden = orden;
         this.owningListId = owningListId;
+
     }
 
-    public long getId() {
-        return id;
-    }
+    //GETTERS
+    public Long getId() { return id; }
+    public String getTitulo() { return titulo; } // CORREGIDO: getTitulo
+    public String getDescripcion() { return descripcion; } // Añadido
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; } // Añadido
+    public LocalDate getExpiresOn() { return expiresOn; }
+    public Integer getOrden() { return orden; } // CORREGIDO: getOrden
+    public Long getOwningListId() { return owningListId; }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public LocalDate getExpiresOn() {
-        return expiresOn;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public long getOwningListId() {
-        return owningListId;
-    }
+    //SETTERS
+    public void setTitulo(String titulo) { this.titulo = titulo; } // CORREGIDO: setTitulo
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; } // Añadido
+    public void setExpiresOn(LocalDate expiresOn) { this.expiresOn = expiresOn; }
+    public void setOrden(Integer orden) { this.orden = orden; } // CORREGIDO: setOrden
+    public void setOwningListId(Long owningListId) { this.owningListId = owningListId; }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return id == card.id;
+        return Objects.equals(id, card.id); // Usar Objects.equals con Long
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return id != null ? id.hashCode() : 0; // Manejar posible null de Long
     }
 }

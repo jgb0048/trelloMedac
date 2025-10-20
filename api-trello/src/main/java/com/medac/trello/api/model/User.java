@@ -16,7 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id_usuario")
-    private long id;
+    private Long id;
 
     @Column(name = "nombre")
     private String name;

@@ -14,17 +14,21 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id_comentario")
-    private long id;
+    private Long id;
     @Column(name = "contenido", nullable = false)
     private String content;
     @Column(name = "fecha", nullable = false)
     private LocalDateTime createdOn;
     @Column(name = "id_usuario", nullable = false)
-    private long addedById;
+    private Long addedById;
     @Column(name = "id_tarjeta", nullable = false)
-    private long owningCardId;
+    private Long owningCardId;
 
-    public Comment(String content, LocalDateTime createdOn, long addedById, long owningCardId) {
+
+    // CONSTRUCTOR SIN ARGUMENTOS REQUERIDO POR JPA
+    public Comment() {
+    }
+    public Comment(String content, LocalDateTime createdOn, Long addedById, Long owningCardId) {
         this.content = content;
         this.createdOn = createdOn;
         this.addedById = addedById;

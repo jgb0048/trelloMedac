@@ -1,11 +1,9 @@
 package com.medac.trello.api.resources;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000")
-@RestController
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public interface TrelloApi {
-
-    String BASE_API_PATH = "/trello/v1/";
+    // Definimos la ruta base de la API
+    String BASE_API_PATH = "/api";
 }
