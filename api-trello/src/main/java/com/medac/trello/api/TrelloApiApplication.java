@@ -14,8 +14,12 @@ public class TrelloApiApplication {
         SpringApplication.run(TrelloApiApplication.class);
     }
 
-    @Bean
+  /*  @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
         return factory -> factory.setContextPath("/trello/v1");
     }
+
+   */
 }
+
+

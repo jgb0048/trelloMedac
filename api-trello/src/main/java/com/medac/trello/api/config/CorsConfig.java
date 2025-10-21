@@ -1,4 +1,4 @@
-//package com.medac.trello.api.config;
+package com.medac.trello.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

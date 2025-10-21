@@ -14,7 +14,8 @@ import java.util.Set;
 // Implementamos la interfaz TrelloApi
 @RestController
 @RequestMapping(TrelloApi.BASE_API_PATH + "/tableros")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BoardController implements TrelloApi {
 
     @Autowired
