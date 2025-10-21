@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
   <component name="AdditionalModuleElements">
@@ -6,4 +7,14 @@
       <excludeFolder url="file://$MODULE_DIR$" />
     </content>
   </component>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$" />
+    </content>
+  </component>
+>>>>>>> 600b2cd6d0d7ecea5dff2ccc610d9a00a957caec
 </module>
