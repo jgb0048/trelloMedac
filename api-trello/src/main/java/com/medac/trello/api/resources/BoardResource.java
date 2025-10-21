@@ -22,8 +22,8 @@ import static org.springframework.http.HttpStatus.CREATED; // Importar el códig
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping(value = TrelloApi.BASE_API_PATH + "tableros", produces = APPLICATION_JSON_VALUE) // Ruta en español
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping(value = TrelloApi.BASE_API_PATH + "/tableros", produces = APPLICATION_JSON_VALUE) // Ruta en español
 public class BoardResource implements TrelloApi {
 
     private final BoardRepository boardRepository;

@@ -17,13 +17,18 @@ public class Comment {
     private Long id;
     @Column(name = "contenido", nullable = false)
     private String content;
-    @Column(name = "fecha", nullable = false)
+    //@Column(name = "fecha", nullable = false)
+    //private LocalDateTime createdOn;
+    @Column(name = "fecha", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdOn;
-    @Column(name = "id_usuario", nullable = false)
+    //@Column(name = "id_usuario", nullable = false)
+    //private Long addedById;
+    //@Column(name = "id_tarjeta", nullable = false)
+    //private Long owningCardId;
+    @Column(name = "id_usuario", nullable = false, insertable = false, updatable = false)
     private Long addedById;
-    @Column(name = "id_tarjeta", nullable = false)
+    @Column(name = "id_tarjeta", nullable = false, insertable = false, updatable = false)
     private Long owningCardId;
-
 
     // CONSTRUCTOR SIN ARGUMENTOS REQUERIDO POR JPA
     public Comment() {
@@ -35,7 +40,7 @@ public class Comment {
         this.owningCardId = owningCardId;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -47,19 +52,33 @@ public class Comment {
         return createdOn;
     }
 
-    public long getAddedById() {
+    public Long getAddedById() {
         return addedById;
     }
 
-    public long getOwningCardId() {
+    public Long getOwningCardId() {
         return owningCardId;
     }
+
+
+    //SETTERS
+    // Setters para las claves foráneas si se van a inyectar en un DTO
+    public void setAddedById(Long addedById) {
+        this.addedById = addedById;
+    }
+
+    public void setOwningCardId(Long owningCardId) {
+        this.owningCardId = owningCardId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return id == comment.id;
+        //return id == comment.id;
+        //Para comprobaciónn segira de Long
+        return Objects.equals(id, comment.id);
     }
 
     @Override
