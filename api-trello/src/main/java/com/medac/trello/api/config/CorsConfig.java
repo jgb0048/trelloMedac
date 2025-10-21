@@ -40,7 +40,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Configuración global para habilitar Cross-Origin Resource Sharing (CORS).
  * Resuelve el error 500 causado por la combinación de allowCredentials(true) y allowedOrigins("*").
  * Spring exige especificar el origen cuando se permiten credenciales.
- */
+
 /*@Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
