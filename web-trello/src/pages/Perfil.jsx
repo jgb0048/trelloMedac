@@ -19,7 +19,13 @@ export default function Profile() {
   const initial = (user?.email || "U").charAt(0).toUpperCase();
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-neutral-50 to-white px-4 py-8">
+    <section
+      className="
+        min-h-screen px-4 py-8 transition-colors duration-300
+        bg-[var(--color-surface)] 
+        text-[var(--text-base-color)]
+      "
+    >
       <div className="mx-auto w-full max-w-3xl">
         <div className="mb-4">
           <Button variant="secondary" onClick={() => navigate(-1)}>
@@ -27,35 +33,76 @@ export default function Profile() {
           </Button>
         </div>
 
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+        {/* Tarjeta del perfil */}
+        <div className="profile-card p-6">
+
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-100 text-violet-700 text-xl font-semibold">
+            {/* Inicial redonda */}
+            <div
+              className="
+                flex h-14 w-14 items-center justify-center
+                rounded-full
+                text-white text-xl font-semibold shadow-sm
+              "
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--color-brand-600) 0%, var(--color-brand-500) 100%)",
+              }}
+            >
               {initial}
             </div>
-            <div>
-              <h1 className="text-xl font-bold">Perfil</h1>
-              <p className="text-sm text-neutral-600">Información de tu cuenta</p>
+
+            <div className="flex flex-col">
+              <h1
+                className="text-xl font-bold leading-tight"
+                style={{ color: "var(--text-heading-color)" }}
+              >
+                Perfil
+              </h1>
+              <p
+                className="text-sm font-medium"
+                style={{ color: "var(--text-dim-color)" }}
+              >
+                Información de tu cuenta
+              </p>
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border bg-white p-4">
-              <div className="text-xs uppercase tracking-wide text-neutral-500">Nombre</div>
-              <div className="mt-1 text-sm font-medium text-neutral-900">{displayName}</div>
-            </div>
+          {/* Datos del usuario */}
+<div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+  {[
+    { label: "Nombre", value: displayName },
+    { label: "Correo", value: user?.email || "—" },
+    { label: "Inicial", value: initial },
+  ].map(({ label, value }) => (
+    <div
+      key={label}
+      className="
+        profile-field rounded-xl border p-4
+        transition-all duration-300
+        shadow-[0_0_6px_rgba(0,0,0,0.04)]
+        hover:shadow-[0_0_10px_rgba(127,86,217,0.15)]
+      "
+      style={{
+        backgroundColor: "var(--card-bg-color)",
+      }}
+    >
+      <div
+        className="text-xs uppercase tracking-wide font-semibold"
+        style={{ color: "var(--text-dim-color)" }}
+      >
+        {label}
+      </div>
+      <div
+        className="mt-1 text-sm font-semibold"
+        style={{ color: "var(--text-base-color)" }}
+      >
+        {value}
+      </div>
+    </div>
+  ))}
+</div>
 
-            <div className="rounded-xl border bg-white p-4">
-              <div className="text-xs uppercase tracking-wide text-neutral-500">Correo</div>
-              <div className="mt-1 text-sm font-medium text-neutral-900">{user?.email || "—"}</div>
-            </div>
-
-            <div className="rounded-xl border bg-white p-4">
-              <div className="text-xs uppercase tracking-wide text-neutral-500">Inicial</div>
-              <div className="mt-1 text-sm font-medium text-neutral-900">{initial}</div>
-            </div>
-
-            {/* hueco por si queremos poner mas cosas */}
-          </div>
         </div>
       </div>
     </section>

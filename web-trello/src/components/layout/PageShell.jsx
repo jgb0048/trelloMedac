@@ -5,12 +5,12 @@ import { useAuth } from "../../modules/auth/AuthContext.jsx";
 
 export default function PageShell({ title, actions, children }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-25 via-white to-brand-50">
+    <div className="min-h-screen bg-[var(--color-surface)] text-[var(--color-neutral-950)] dark:bg-[var(--color-brand-25)] dark:text-white transition-colors duration-300">
       <Header />
-      <main className="mx-auto max-w-7xl px-6 py-8">
+      <main className="mx-auto max-w-7xl px-6 py-8 transition-colors duration-300">
         <div className="flex items-center justify-between gap-4">
           {title ? (
-            <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900">
+            <h1 className="text-3xl font-extrabold tracking-tight text-[var(--color-neutral-950)] dark:text-[var(--color-brand-500)]">
               {title}
             </h1>
           ) : (
@@ -23,6 +23,7 @@ export default function PageShell({ title, actions, children }) {
     </div>
   );
 }
+
 
 function Header() {
   return (

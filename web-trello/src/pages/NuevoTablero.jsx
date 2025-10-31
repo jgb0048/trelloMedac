@@ -99,65 +99,66 @@ export default function NuevoTablero() {
     };
 
     return (
-        <section className="min-h-screen bg-gradient-to-b from-neutral-50 to-white px-4 py-8">
-            <div className="mx-auto w-full max-w-3xl">
-                {/* ... Botón Volver */}
-                <div className="mb-4">
-                    <Button variant="secondary" onClick={() => navigate(-1)}>
-                        ← Volver
-                    </Button>
-                </div>
+        <section className="min-h-screen bg-neutral-50 p-8">
+            <div className="mx-auto w-full max-w-lg bg-white p-8 rounded-xl shadow-2xl">
+                <h1 className="text-3xl font-bold text-neutral-800 mb-6 border-b pb-2">
+                    Crear Nuevo Tablero
+                </h1>
+                
+                {error && (
+                    <div className="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <p>{error}</p>
+                    </div>
+                )}
 
-                <div className="rounded-2xl border bg-white p-6 shadow-sm">
-                    <h1 className="text-xl font-bold mb-6">Creación de tableros</h1>
-
-                    {error && (
-                        <div className="rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700 mb-4">
-                            Error: {error}
-                        </div>
-                    )}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-neutral-700">
+                            Nombre del Tablero <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm p-2"
+                            disabled={loading}
+                        />
+                    </div>
                     
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        
-                        {/* Campo Nombre del Tablero */}
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-1">
-                                Nombre del Tablero
-                            </label>
-                            <Input
-                                type="text"
-                                id="name"
-                                // CAMBIO: Usamos 'name' para coincidir con el estado y la entidad Java
-                                name="name" 
-                                placeholder="Ej. Proyecto Alpha"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                    <div>
+                        <label htmlFor="description" className="block text-sm font-medium text-neutral-700">
+                            Descripción (Opcional)
+                        </label>
+                        <textarea
+                            id="description"
+                            rows="3"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="mt-1 block w-full border border-neutral-300 rounded-md shadow-sm p-2"
+                            disabled={loading}
+                        />
+                    </div>
 
-                        {/* Campo Descripción del Tablero */}
-                        <div>
-                            <label htmlFor="description" className="block text-sm font-medium text-neutral-700 mb-1">
-                                Descripción (Opcional)
-                            </label>
-                            <Textarea
-                                id="description"
-                                // CAMBIO: Usamos 'description' para coincidir con el estado y la entidad Java
-                                name="description" 
-                                placeholder="Una breve descripción de lo que se gestionará aquí."
-                                value={formData.description}
-                                onChange={handleChange}
-                                rows="4"
-                            />
-                        </div>
-
-                        {/* Botón de Envío */}
-                        <Button type="submit" className="w-full" disabled={loading}>
-                            {loading ? "Creando..." : "Crear Tablero"}
+                    <div className="flex justify-end space-x-3 pt-4">
+                        <Button 
+                            variant="secondary" 
+                            type="button" 
+                            onClick={() => navigate(-1)}
+                            disabled={loading}
+                        >
+                            Cancelar
                         </Button>
-                    </form>
-                </div>
+                        <Button 
+                            type="submit" 
+                            disabled={loading}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                            {loading ? 'Creando...' : 'Crear Tablero'}
+                        </Button>
+                    </div>
+                </form>
             </div>
         </section>
     );
