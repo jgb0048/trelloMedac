@@ -60,4 +60,10 @@ public class UserResource implements TrelloApi {
         // la cuenta y registrar la aplicacion
         return ok("");
     }
+
+    @GetMapping("/check-email-exists")
+    public ResponseEntity<Boolean> checkEmailExists(@RequestParam("email") String email) {
+        boolean exists = userRepository.existsByEmail(email);
+        return ok(exists);
+    }
 }
