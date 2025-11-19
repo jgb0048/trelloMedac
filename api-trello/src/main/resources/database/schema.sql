@@ -1,3 +1,6 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+
 CREATE TABLE IF NOT EXISTS usuario (
   id_usuario        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre_usuario    VARCHAR(100) NOT NULL,
@@ -239,4 +242,19 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS workspace_board_link (
+  id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  workspace_id BIGINT NOT NULL,
+  board_id BIGINT NOT NULL,
+  UNIQUE KEY uq_workspace_board (workspace_id, board_id),
+  CONSTRAINT fk_wb_workspace
+    FOREIGN KEY (workspace_id) REFERENCES espacio_trabajo(id_espacio)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_wb_board
+    FOREIGN KEY (board_id) REFERENCES tablero(id_tablero)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
