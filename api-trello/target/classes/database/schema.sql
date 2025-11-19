@@ -1,3 +1,7 @@
+-- =========================
+-- ESPACIOS DE TRABAJO
+-- =========================
+
 CREATE TABLE IF NOT EXISTS usuario (
   id_usuario        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre_usuario    VARCHAR(100) NOT NULL,
@@ -250,3 +254,4 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
