@@ -28,9 +28,7 @@ CREATE TABLE IF NOT EXISTS espacio_trabajo (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =========================
--- RELACIÓN ESPACIOS <-> TABLEROS (links adicionales)
--- =========================
+
 
 
 -- =========================
@@ -256,5 +254,6 @@ CREATE TABLE IF NOT EXISTS suscripcion (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 
