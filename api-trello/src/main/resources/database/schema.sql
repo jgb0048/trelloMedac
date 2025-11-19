@@ -1,41 +1,40 @@
--- =========================================
---  SCHEMA TrelloMedac (orden correcto)
--- =========================================
-
--- 1) USUARIOS
 CREATE TABLE IF NOT EXISTS usuario (
-  id_usuario         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  nombre_usuario     VARCHAR(100) NOT NULL,
-  nombre             VARCHAR(100) NOT NULL,
-  email              VARCHAR(100) NOT NULL UNIQUE,
-  password           VARCHAR(255) NOT NULL,
-  is_verified        BOOLEAN NOT NULL DEFAULT FALSE,
-  fecha_creacion     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id_usuario        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre_usuario    VARCHAR(100) NOT NULL,
+  nombre            VARCHAR(100) NOT NULL,
+  email             VARCHAR(100) NOT NULL UNIQUE,
+  password          VARCHAR(255) NOT NULL,
+  is_verified       BOOLEAN NOT NULL DEFAULT FALSE,
+  fecha_creacion    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   confirmation_token VARCHAR(255),
   stripe_customer_id VARCHAR(255) NULL UNIQUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 2) ESPACIOS DE TRABAJO (referencia a usuario)
+-- =========================
+-- ESPACIOS DE TRABAJO
+-- =========================
 CREATE TABLE IF NOT EXISTS espacio_trabajo (
-  id_espacio        BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  nombre            VARCHAR(100) NOT NULL,
-  descripcion       TEXT,
-  fecha_creacion    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id_espacio       BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre           VARCHAR(100) NOT NULL,
+  descripcion      TEXT,
+  fecha_creacion   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   id_usuario_duenio BIGINT NOT NULL,
   CONSTRAINT fk_espacio_usuario_duenio
     FOREIGN KEY (id_usuario_duenio) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3) TABLEROS (referencia a usuario y espacio_trabajo)
+-- =========================
+-- TABLEROS (POSICIÓN CORREGIDA: AHORA VA ANTES DE workspace_board_link)
+-- =========================
 CREATE TABLE IF NOT EXISTS tablero (
-  id_tablero          BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  nombre              VARCHAR(100) NOT NULL,
-  descripcion         TEXT,
-  background          VARCHAR(255),
-  fecha_creacion      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  id_usuario_creador  BIGINT NOT NULL,
-  id_espacio          BIGINT NULL,
+  id_tablero         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  nombre             VARCHAR(100) NOT NULL,
+  descripcion        TEXT,
+  background         VARCHAR(255),
+  fecha_creacion     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id_usuario_creador BIGINT NOT NULL,
+  id_espacio         BIGINT NULL,
   CONSTRAINT fk_tablero_usuario_creador
     FOREIGN KEY (id_usuario_creador) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE,
@@ -44,21 +43,25 @@ CREATE TABLE IF NOT EXISTS tablero (
       ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-- 16) VÍNCULO ESPACIO <-> TABLERO (requiere que existan espacio_trabajo y tablero)
+-- =========================
+-- RELACIÓN ESPACIOS <-> TABLEROS (links adicionales) (AHORA PUEDE REFERENCIAR A tablero)
+-- =========================
 CREATE TABLE IF NOT EXISTS workspace_board_link (
-  id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  workspace_id BIGINT NOT NULL,
-  board_id     BIGINT NOT NULL,
+  id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  workspace_id     BIGINT NOT NULL,
+  board_id         BIGINT NOT NULL,
   UNIQUE KEY uq_workspace_board (workspace_id, board_id),
   CONSTRAINT fk_wb_workspace
     FOREIGN KEY (workspace_id) REFERENCES espacio_trabajo(id_espacio)
       ON DELETE CASCADE,
   CONSTRAINT fk_wb_board
-    FOREIGN KEY (board_id) REFERENCES tablero(id_tablero)
+    FOREIGN KEY (board_id) REFERENCES tablero(id_tablero) -- ¡TABLERO YA EXISTE!
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4) MIEMBROS DE TABLERO (N..N usuario<->tablero)
+-- =========================
+-- MIEMBROS DE TABLEROS
+-- =========================
 CREATE TABLE IF NOT EXISTS miembro_tablero (
   id_usuario BIGINT NOT NULL,
   id_tablero BIGINT NOT NULL,
@@ -72,7 +75,9 @@ CREATE TABLE IF NOT EXISTS miembro_tablero (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5) LISTAS (referencia a tablero)
+-- =========================
+-- LISTAS
+-- =========================
 CREATE TABLE IF NOT EXISTS lista (
   id_lista   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre     VARCHAR(100) NOT NULL,
@@ -83,7 +88,9 @@ CREATE TABLE IF NOT EXISTS lista (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6) TARJETAS (referencia a lista)
+-- =========================
+-- TARJETAS
+-- =========================
 CREATE TABLE IF NOT EXISTS tarjeta (
   id_tarjeta   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   titulo       VARCHAR(100) NOT NULL,
@@ -98,7 +105,9 @@ CREATE TABLE IF NOT EXISTS tarjeta (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 7) COMENTARIOS (referencia a usuario y tarjeta)
+-- =========================
+-- COMENTARIOS
+-- =========================
 CREATE TABLE IF NOT EXISTS comentario (
   id_comentario BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   contenido     TEXT NOT NULL,
@@ -113,7 +122,9 @@ CREATE TABLE IF NOT EXISTS comentario (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 8) ETIQUETAS (referencia a tablero)
+-- =========================
+-- ETIQUETAS
+-- =========================
 CREATE TABLE IF NOT EXISTS etiqueta (
   id_etiqueta BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre      VARCHAR(50) NOT NULL,
@@ -124,7 +135,9 @@ CREATE TABLE IF NOT EXISTS etiqueta (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 9) TARJETA_ETIQUETA (N..N tarjeta<->etiqueta)
+-- =========================
+-- TARJETA_ETIQUETA (N..N)
+-- =========================
 CREATE TABLE IF NOT EXISTS tarjeta_etiqueta (
   id_tarjeta  BIGINT NOT NULL,
   id_etiqueta BIGINT NOT NULL,
@@ -137,7 +150,9 @@ CREATE TABLE IF NOT EXISTS tarjeta_etiqueta (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 10) ARCHIVOS (referencia a tarjeta)
+-- =========================
+-- ARCHIVOS (adjuntos)
+-- =========================
 CREATE TABLE IF NOT EXISTS archivo (
   id_archivo BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombre     VARCHAR(100) NOT NULL,
@@ -148,13 +163,15 @@ CREATE TABLE IF NOT EXISTS archivo (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 11) HISTORIAL DE MOVIMIENTOS (referencias a tarjeta/listas)
+-- =========================
+-- HISTORIAL DE MOVIMIENTOS
+-- =========================
 CREATE TABLE IF NOT EXISTS historial_movimiento (
-  id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  id_tarjeta       BIGINT NOT NULL,
-  id_lista_origen  BIGINT NULL,
-  id_lista_destino BIGINT NOT NULL,
-  fecha_movimiento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_tarjeta        BIGINT NOT NULL,
+  id_lista_origen   BIGINT NULL,
+  id_lista_destino  BIGINT NOT NULL,
+  fecha_movimiento  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_historial_tarjeta
     FOREIGN KEY (id_tarjeta) REFERENCES tarjeta(id_tarjeta)
       ON DELETE CASCADE,
@@ -166,18 +183,22 @@ CREATE TABLE IF NOT EXISTS historial_movimiento (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 12) TOKENS DE REFRESCO (referencia a usuario)
+-- =========================
+-- TOKENS DE REFRESCO
+-- =========================
 CREATE TABLE IF NOT EXISTS tokens_refresco (
-  id               BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  token            VARCHAR(100) NOT NULL UNIQUE,
+  id              BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  token           VARCHAR(100) NOT NULL UNIQUE,
   fecha_expiracion TIMESTAMP NOT NULL,
-  id_duenio        BIGINT NOT NULL,
+  id_duenio       BIGINT NOT NULL,
   CONSTRAINT fk_tokens_usuario
     FOREIGN KEY (id_duenio) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 13) INVITACIONES (referencia a tablero y usuario)
+-- =========================
+-- INVITACIONES
+-- =========================
 CREATE TABLE IF NOT EXISTS invitacion (
   id                   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   token                VARCHAR(255) NOT NULL UNIQUE,
@@ -196,13 +217,15 @@ CREATE TABLE IF NOT EXISTS invitacion (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 14) NOTIFICACIONES (referencias a usuario)
+-- =========================
+-- NOTIFICACIONES
+-- =========================
 CREATE TABLE IF NOT EXISTS notificaciones (
-  id                 BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  descripcion        VARCHAR(255) NOT NULL,
-  id_usuario_origen  BIGINT NOT NULL,
+  id                BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  descripcion       VARCHAR(255) NOT NULL,
+  id_usuario_origen BIGINT NOT NULL,
   id_usuario_destino BIGINT NOT NULL,
-  fecha_creacion     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_creacion    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_notif_origen
     FOREIGN KEY (id_usuario_origen) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE,
@@ -211,32 +234,22 @@ CREATE TABLE IF NOT EXISTS notificaciones (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 15) SUSCRIPCIONES (referencia a usuario)
+-- =========================
+-- SUSCRIPCIONES
+-- =========================
 CREATE TABLE IF NOT EXISTS suscripcion (
-  id_suscripcion   BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  id_usuario       BIGINT NOT NULL,
-  plan_nombre      VARCHAR(50) NOT NULL,
-  is_active        BOOLEAN NOT NULL DEFAULT FALSE,
-  fecha_inicio     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id_suscripcion  BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id_usuario      BIGINT NOT NULL,
+  plan_nombre     VARCHAR(50) NOT NULL,               -- 'free', 'pro', etc.
+  is_active       BOOLEAN NOT NULL DEFAULT FALSE,
+  fecha_inicio    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   fecha_expiracion TIMESTAMP NULL,
-  last_updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                   ON UPDATE CURRENT_TIMESTAMP,
+  last_updated    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                               ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_suscripcion_usuario
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- 16) VÍNCULO ESPACIO <-> TABLERO (requiere que existan espacio_trabajo y tablero)
-CREATE TABLE IF NOT EXISTS workspace_board_link (
-  id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  workspace_id BIGINT NOT NULL,
-  board_id     BIGINT NOT NULL,
-  UNIQUE KEY uq_workspace_board (workspace_id, board_id),
-  CONSTRAINT fk_wb_workspace
-    FOREIGN KEY (workspace_id) REFERENCES espacio_trabajo(id_espacio)
-      ON DELETE CASCADE,
-  CONSTRAINT fk_wb_board
-    FOREIGN KEY (board_id) REFERENCES tablero(id_tablero)
-      ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
