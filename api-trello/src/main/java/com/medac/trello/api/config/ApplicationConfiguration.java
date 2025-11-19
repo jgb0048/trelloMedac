@@ -1,7 +1,6 @@
 package com.medac.trello.api.config;
 
 import com.medac.trello.api.model.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,41 +14,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ApplicationConfiguration {
-    private final UserRepository userRepository;
 
-    @Autowired
-    public ApplicationConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  // No campos ni constructor aquí
 
-    @Bean
-    UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+  @Bean
+  public UserDetailsService userDetailsService(UserRepository userRepository) {
+    return username -> userRepository.findByEmail(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 
-    @Bean
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+  }
 
-    @Bean
-    AuthenticationProvider authenticationProvider(
-            // 🎯 Spring inyectará automáticamente los beans que definiste arriba
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder
-    ) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(); // Constructor vacío
-
-        // 🎯 Usa los beans inyectados
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-
-        return authProvider;
-    }
+  @Bean
+  public AuthenticationProvider authenticationProvider(
+      UserDetailsService userDetailsService,
+      PasswordEncoder passwordEncoder
+  ) {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder);
+    return authProvider;
+  }
 }
