@@ -44,6 +44,20 @@ CREATE TABLE IF NOT EXISTS tablero (
       ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+- 16) VÍNCULO ESPACIO <-> TABLERO (requiere que existan espacio_trabajo y tablero)
+CREATE TABLE IF NOT EXISTS workspace_board_link (
+  id           BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  workspace_id BIGINT NOT NULL,
+  board_id     BIGINT NOT NULL,
+  UNIQUE KEY uq_workspace_board (workspace_id, board_id),
+  CONSTRAINT fk_wb_workspace
+    FOREIGN KEY (workspace_id) REFERENCES espacio_trabajo(id_espacio)
+      ON DELETE CASCADE,
+  CONSTRAINT fk_wb_board
+    FOREIGN KEY (board_id) REFERENCES tablero(id_tablero)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 4) MIEMBROS DE TABLERO (N..N usuario<->tablero)
 CREATE TABLE IF NOT EXISTS miembro_tablero (
   id_usuario BIGINT NOT NULL,
@@ -225,3 +239,4 @@ CREATE TABLE IF NOT EXISTS workspace_board_link (
     FOREIGN KEY (board_id) REFERENCES tablero(id_tablero)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
